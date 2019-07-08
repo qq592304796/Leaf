@@ -4,11 +4,13 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.sankuai.inf.leaf.IDGen;
 import com.sankuai.inf.leaf.common.PropertyFactory;
 import com.sankuai.inf.leaf.common.Result;
+import com.sankuai.inf.leaf.common.Status;
 import com.sankuai.inf.leaf.segment.dao.IDAllocDao;
 import com.sankuai.inf.leaf.segment.dao.impl.IDAllocDaoImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.util.StopWatch;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -44,6 +46,25 @@ public class IDGenServiceTest {
             System.out.println(r);
         }
     }
+
+    @Test
+    public void testPerformance() {
+        StopWatch sw = new StopWatch();
+        sw.start();
+        int count  = 5000;
+        for (int i = 1; i < count; ++i) {
+            Result result = idGen.get("leaf-segment-test1");
+            if (Status.EXCEPTION == result.getStatus()) {
+                System.out.println(result);
+            }
+        }
+        sw.stop();
+        System.out.println(sw.prettyPrint());
+        // 计算并发
+        double concurrent = count / sw.getTotalTimeSeconds();
+        System.out.println("concurrent:" + concurrent);
+    }
+
     @After
     public void after() {
        dataSource.close();

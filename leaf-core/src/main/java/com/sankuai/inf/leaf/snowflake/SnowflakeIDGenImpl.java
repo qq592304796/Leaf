@@ -19,7 +19,7 @@ public class SnowflakeIDGenImpl implements IDGen {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(SnowflakeIDGenImpl.class);
 
-    private final long twepoch = 1288834974657L;
+    private final long twepoch = 1562548388638L;
     private final long workerIdBits = 10L;
     private final long maxWorkerId = -1L ^ (-1L << workerIdBits);//最大能够分配的workerid =1023
     private final long sequenceBits = 12L;
