@@ -1,22 +1,36 @@
 package com.sankuai.inf.leaf.snowflake;
 
+import com.sankuai.inf.leaf.Constants;
 import com.sankuai.inf.leaf.IDGen;
+import com.sankuai.inf.leaf.TestBootstrap;
 import com.sankuai.inf.leaf.common.PropertyFactory;
 import com.sankuai.inf.leaf.common.Result;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StopWatch;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = TestBootstrap.class)
 public class SnowflakeIDGenImplTest {
+
+    @Autowired
+    @Qualifier(Constants.LEAF_SNOWFLAKE_ID_GEN_IMPL_NAME)
+    private IDGen idGen;
+
     @Test
     public void testGetId() {
         Properties properties = PropertyFactory.getProperties();
 
-        IDGen idGen = new SnowflakeIDGenImpl(properties.getProperty("leaf.zk.list"), 8080);
+        IDGen idGen = new SnowflakeIDGenImpl(properties.getProperty("leaf.zk.list"), 8080, properties.getProperty("leaf.name"));
         for (int i = 1; i < 1000; ++i) {
             Result r = idGen.get("a");
             System.out.println(r);
@@ -72,11 +86,8 @@ public class SnowflakeIDGenImplTest {
         System.out.println("maxYear:" + maxYear);
     }
 
-    @Ignore
     @Test
     public void testIncreasingTrend() {
-        Properties properties = PropertyFactory.getProperties();
-        IDGen idGen = new SnowflakeIDGenImpl(properties.getProperty("leaf.zk.list"), 8080);
         StopWatch sw = new StopWatch();
         List<Long> caches = new ArrayList<>(10000);
         sw.start();

@@ -1,10 +1,10 @@
-package com.sankuai.inf.leaf.server.model;
+package com.sankuai.inf.leaf.segment.model;
 
 /**
  * @author jiangxinjun
  * @date 2019/07/04
  */
-public class SegmentDTO {
+public class SegmentStep {
 
     /**
      * 最大ID
@@ -12,9 +12,14 @@ public class SegmentDTO {
     private Long maxId;
 
     /**
-     * 步长
+     * 最小步长
      */
     private Integer step;
+
+    /**
+     * 实际步长
+     */
+    private Integer actualStep;
 
     public Long getMaxId() {
         return maxId;
@@ -30,5 +35,13 @@ public class SegmentDTO {
 
     public void setStep(Integer step) {
         this.step = step;
+    }
+
+    public Integer getActualStep() {
+        return actualStep;
+    }
+
+    public void setActualStep(Integer actualStep) {
+        this.actualStep = actualStep;
     }
 }

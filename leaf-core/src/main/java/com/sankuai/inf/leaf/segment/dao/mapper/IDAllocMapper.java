@@ -1,10 +1,14 @@
-package com.sankuai.inf.leaf.segment.dao;
+package com.sankuai.inf.leaf.segment.dao.mapper;
 
 import com.sankuai.inf.leaf.segment.model.LeafAlloc;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
+/**
+ * @author jiangxinjun
+ * @date 2019/09/03
+ */
 public interface IDAllocMapper {
 
     @Select("SELECT biz_tag, max_id, step, update_time FROM leaf_alloc")
@@ -27,7 +31,7 @@ public interface IDAllocMapper {
     @Update("UPDATE leaf_alloc SET max_id = max_id + step WHERE biz_tag = #{tag}")
     void updateMaxId(@Param("tag") String tag);
 
-    @Update("UPDATE leaf_alloc SET max_id = max_id + #{step} WHERE biz_tag = #{key}")
+    @Update("UPDATE leaf_alloc SET max_id = max_id + #{leafAlloc.step} WHERE biz_tag = #{leafAlloc.key}")
     void updateMaxIdByCustomStep(@Param("leafAlloc") LeafAlloc leafAlloc);
 
     @Select("SELECT biz_tag FROM leaf_alloc")

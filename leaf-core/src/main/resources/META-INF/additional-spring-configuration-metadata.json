@@ -1,0 +1,44 @@
+{"properties": [
+  {
+    "name": "leaf.name",
+    "type": "java.lang.String",
+    "description": "服务名."
+  },
+  {
+    "name": "leaf.segment.enable",
+    "type": "java.lang.Boolean",
+    "description": "是否开启号段模式.",
+    "defaultValue": false
+  },
+  {
+    "name": "leaf.jdbc.url",
+    "type": "java.lang.String",
+    "description": "mysql 库地址."
+  },
+  {
+    "name": "leaf.jdbc.username",
+    "type": "java.lang.String",
+    "description": "mysql 用户名."
+  },
+  {
+    "name": "leaf.jdbc.password",
+    "type": "java.lang.String",
+    "description": "mysql 密码."
+  },
+  {
+    "name": "leaf.snowflake.enable",
+    "type": "java.lang.Boolean",
+    "description": "是否开启snowflake模式.",
+    "defaultValue": false
+  },
+  {
+    "name": "leaf.snowflake.zk.address",
+    "type": "java.lang.String",
+    "description": "snowflake模式下的zk地址."
+  },
+  {
+    "name": "leaf.snowflake.port",
+    "type": "java.lang.Integer",
+    "description": "snowflake模式下的服务注册端口."
+  }
+]}

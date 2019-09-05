@@ -1,44 +1,34 @@
 package com.sankuai.inf.leaf.segment;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.sankuai.inf.leaf.Constants;
 import com.sankuai.inf.leaf.IDGen;
-import com.sankuai.inf.leaf.common.PropertyFactory;
+import com.sankuai.inf.leaf.LeafAutoConfiguration;
+import com.sankuai.inf.leaf.TestBootstrap;
 import com.sankuai.inf.leaf.common.Result;
 import com.sankuai.inf.leaf.common.Status;
-import com.sankuai.inf.leaf.segment.dao.IDAllocDao;
-import com.sankuai.inf.leaf.segment.dao.impl.IDAllocDaoImpl;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StopWatch;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Properties;
-
+/**
+ * @author jiangxinjun
+ * @date 2019/09/04
+ */
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = TestBootstrap.class)
 public class IDGenServiceTest {
-    IDGen idGen;
-    DruidDataSource dataSource;
-    @Before
-    public void before() throws IOException, SQLException {
-        // Load Db Config
-        Properties properties = PropertyFactory.getProperties();
 
-        // Config dataSource
-        dataSource = new DruidDataSource();
-        dataSource.setUrl(properties.getProperty("jdbc.url"));
-        dataSource.setUsername(properties.getProperty("jdbc.username"));
-        dataSource.setPassword(properties.getProperty("jdbc.password"));
-        dataSource.init();
+    @Autowired
+    @Qualifier(Constants.LEAF_SEGMENT_ID_GEN_IMPL_NAME)
+    private IDGen idGen;
 
-        // Config Dao
-        IDAllocDao dao = new IDAllocDaoImpl(dataSource);
-
-        // Config ID Gen
-        idGen = new SegmentIDGenImpl();
-        ((SegmentIDGenImpl) idGen).setDao(dao);
-        idGen.init();
-    }
     @Test
     public void testGetId() {
         for (int i = 0; i < 100; ++i) {
@@ -63,11 +53,6 @@ public class IDGenServiceTest {
         // 计算并发
         double concurrent = count / sw.getTotalTimeSeconds();
         System.out.println("concurrent:" + concurrent);
-    }
-
-    @After
-    public void after() {
-       dataSource.close();
     }
 
 }

@@ -4,16 +4,25 @@ import com.sankuai.inf.leaf.IDGen;
 import com.sankuai.inf.leaf.common.Result;
 import com.sankuai.inf.leaf.common.Status;
 import com.sankuai.inf.leaf.segment.dao.IDAllocDao;
-import com.sankuai.inf.leaf.segment.model.*;
+import com.sankuai.inf.leaf.segment.model.LeafAlloc;
+import com.sankuai.inf.leaf.segment.model.Segment;
+import com.sankuai.inf.leaf.segment.model.SegmentBuffer;
+import com.sankuai.inf.leaf.segment.model.SegmentStep;
 import org.perf4j.StopWatch;
 import org.perf4j.slf4j.Slf4JStopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * @author jiangxinjun
+ * @date 2019/09/03
+ */
 public class SegmentIDGenImpl implements IDGen {
     private static final Logger logger = LoggerFactory.getLogger(SegmentIDGenImpl.class);
 
@@ -122,6 +131,10 @@ public class SegmentIDGenImpl implements IDGen {
 
     @Override
     public Result get(final String key) {
+        return get(key, 1);
+    }
+
+    public Result get(final String key, final int step) {
         if (!initOK) {
             return new Result(EXCEPTION_ID_IDCACHE_INIT_FALSE, Status.EXCEPTION);
         }
@@ -140,7 +153,7 @@ public class SegmentIDGenImpl implements IDGen {
                     }
                 }
             }
-            return getIdFromSegmentBuffer(cache.get(key));
+            return getIdFromSegmentBuffer(cache.get(key), step);
         }
         return new Result(EXCEPTION_ID_KEY_NOT_EXISTS, Status.EXCEPTION);
     }
@@ -188,7 +201,7 @@ public class SegmentIDGenImpl implements IDGen {
         sw.stop("updateSegmentFromDb", key + " " + segment);
     }
 
-    public Result getIdFromSegmentBuffer(final SegmentBuffer buffer) {
+    public Result getIdFromSegmentBuffer(final SegmentBuffer buffer, final int step) {
         while (true) {
             try {
                 buffer.rLock().lock();
@@ -218,9 +231,9 @@ public class SegmentIDGenImpl implements IDGen {
                         }
                     });
                 }
-                long value = segment.getValue().getAndIncrement();
-                if (value < segment.getMax()) {
-                    return new Result(value, Status.SUCCESS);
+                Result result = getAndUpdate(segment, step);
+                if (result != null) {
+                    return result;
                 }
             } finally {
                 buffer.rLock().unlock();
@@ -229,9 +242,9 @@ public class SegmentIDGenImpl implements IDGen {
             try {
                 buffer.wLock().lock();
                 final Segment segment = buffer.getCurrent();
-                long value = segment.getValue().getAndIncrement();
-                if (value < segment.getMax()) {
-                    return new Result(value, Status.SUCCESS);
+                Result result = getAndUpdate(segment, step);
+                if (result != null) {
+                    return result;
                 }
                 if (buffer.isNextReady()) {
                     buffer.switchPos();
@@ -244,6 +257,41 @@ public class SegmentIDGenImpl implements IDGen {
                 buffer.wLock().unlock();
             }
         }
+    }
+
+    private Result getAndUpdate(Segment segment, int step) {
+        long value;
+        int finalStep;
+        // 如果当前没有步长，这是为当前步长的1/10
+        int minStep = segment.getBuffer().getMinStep() / 10;
+        if (step <= 0) {
+            finalStep = minStep;
+        } else {
+            finalStep = step;
+        }
+        if (step == 1) {
+            value = segment.getValue().getAndIncrement();
+        } else {
+            value = segment.getValue().getAndUpdate(operand -> {
+                long next = operand + 1;
+                if (next >= segment.getMax()) {
+                    return next;
+                }
+                next = operand + finalStep;
+                if (next > segment.getMax()) {
+                    return segment.getMax() - 1;
+                }
+                return operand + finalStep;
+            });
+        }
+        if (value < segment.getMax()) {
+            SegmentStep segmentStep = new SegmentStep();
+            segmentStep.setStep(minStep);
+            segmentStep.setMaxId(segment.getValue().get());
+            segmentStep.setActualStep((int) (segment.getValue().get() - value));
+            return new Result(segmentStep, Status.SUCCESS);
+        }
+        return null;
     }
 
     private void waitAndSleep(SegmentBuffer buffer) {

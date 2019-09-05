@@ -1,74 +1,43 @@
 package com.sankuai.inf.leaf.segment.dao.impl;
 
 import com.sankuai.inf.leaf.segment.dao.IDAllocDao;
-import com.sankuai.inf.leaf.segment.dao.IDAllocMapper;
+import com.sankuai.inf.leaf.segment.dao.mapper.IDAllocMapper;
 import com.sankuai.inf.leaf.segment.model.LeafAlloc;
-import org.apache.ibatis.mapping.Environment;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.transaction.TransactionFactory;
-import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
+import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @author jiangxinjun
+ * @date 2019/09/03
+ */
 public class IDAllocDaoImpl implements IDAllocDao {
 
-    SqlSessionFactory sqlSessionFactory;
-
-    public IDAllocDaoImpl(DataSource dataSource) {
-        TransactionFactory transactionFactory = new JdbcTransactionFactory();
-        Environment environment = new Environment("development", transactionFactory, dataSource);
-        Configuration configuration = new Configuration(environment);
-        configuration.addMapper(IDAllocMapper.class);
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
-    }
+    @Resource
+    private IDAllocMapper idAllocMapper;
 
     @Override
     public List<LeafAlloc> getAllLeafAllocs() {
-        SqlSession sqlSession = sqlSessionFactory.openSession(false);
-        try {
-            return sqlSession.selectList("com.sankuai.inf.leaf.segment.dao.IDAllocMapper.getAllLeafAllocs");
-        } finally {
-            sqlSession.close();
-        }
+        return idAllocMapper.getAllLeafAllocs();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public LeafAlloc updateMaxIdAndGetLeafAlloc(String tag) {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        try {
-            sqlSession.update("com.sankuai.inf.leaf.segment.dao.IDAllocMapper.updateMaxId", tag);
-            LeafAlloc result = sqlSession.selectOne("com.sankuai.inf.leaf.segment.dao.IDAllocMapper.getLeafAlloc", tag);
-            sqlSession.commit();
-            return result;
-        } finally {
-            sqlSession.close();
-        }
+        idAllocMapper.updateMaxId(tag);
+        return idAllocMapper.getLeafAlloc(tag);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public LeafAlloc updateMaxIdByCustomStepAndGetLeafAlloc(LeafAlloc leafAlloc) {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        try {
-            sqlSession.update("com.sankuai.inf.leaf.segment.dao.IDAllocMapper.updateMaxIdByCustomStep", leafAlloc);
-            LeafAlloc result = sqlSession.selectOne("com.sankuai.inf.leaf.segment.dao.IDAllocMapper.getLeafAlloc", leafAlloc.getKey());
-            sqlSession.commit();
-            return result;
-        } finally {
-            sqlSession.close();
-        }
+        idAllocMapper.updateMaxIdByCustomStep(leafAlloc);
+        return idAllocMapper.getLeafAlloc(leafAlloc.getKey());
     }
 
     @Override
     public List<String> getAllTags() {
-        SqlSession sqlSession = sqlSessionFactory.openSession(false);
-        try {
-            return sqlSession.selectList("com.sankuai.inf.leaf.segment.dao.IDAllocMapper.getAllTags");
-        } finally {
-            sqlSession.close();
-        }
+        return idAllocMapper.getAllTags();
     }
 }

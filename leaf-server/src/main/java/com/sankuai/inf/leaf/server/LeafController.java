@@ -2,9 +2,9 @@ package com.sankuai.inf.leaf.server;
 
 import com.sankuai.inf.leaf.common.Result;
 import com.sankuai.inf.leaf.common.Status;
+import com.sankuai.inf.leaf.segment.model.SegmentStep;
 import com.sankuai.inf.leaf.server.exception.LeafServerException;
 import com.sankuai.inf.leaf.server.exception.NoKeyException;
-import com.sankuai.inf.leaf.server.model.SegmentDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,28 +61,13 @@ public class LeafController {
     }
 
     @RequestMapping(value = "/api/segment/get")
-    public SegmentDTO getSegment(@RequestParam String key, @RequestParam Integer step) {
-        // 可能获取的id不是连续的，不改动内部实现的逻辑，只返回连续的号段
-        long maxId = 0L;
-        int currentStep = 0;
-        for (; currentStep < step; ) {
-            Result result = segmentService.getId(key);
-            // 与项目保持一致，如果出现异常抛出
-            if (result.getStatus().equals(Status.EXCEPTION)) {
-                throw new LeafServerException(result.toString());
-            }
-            long id = result.getId();
-            long difference = id - maxId;
-            if (maxId != 0 && difference != 1) {
-                break;
-            }
-            maxId = id;
-            currentStep++;
+    public SegmentStep getSegment(@RequestParam String key, @RequestParam Integer step) {
+        Result result = segmentService.getIdWithStep(key, step);
+        // 与项目保持一致，如果出现异常抛出
+        if (result.getStatus().equals(Status.EXCEPTION)) {
+            throw new LeafServerException(result.toString());
         }
-        SegmentDTO segment = new SegmentDTO();
-        segment.setMaxId(maxId);
-        segment.setStep(currentStep);
-        return segment;
+        return result.getSegment();
     }
 
     @RequestMapping(value = "/api/cache/get")

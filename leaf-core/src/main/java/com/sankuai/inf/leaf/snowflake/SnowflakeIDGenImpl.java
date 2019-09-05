@@ -7,9 +7,14 @@ import com.sankuai.inf.leaf.common.Status;
 import com.sankuai.inf.leaf.common.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
+/**
+ * @author jiangxinjun
+ * @date 2019/09/03
+ */
 public class SnowflakeIDGenImpl implements IDGen {
 
     @Override
@@ -33,9 +38,9 @@ public class SnowflakeIDGenImpl implements IDGen {
     private static final Random RANDOM = new Random();
     private int port;
 
-    public SnowflakeIDGenImpl(String zkAddress, int port) {
+    public SnowflakeIDGenImpl(String zkAddress, int port, String name) {
         this.port = port;
-        SnowflakeZookeeperHolder holder = new SnowflakeZookeeperHolder(Utils.getIp(), String.valueOf(port), zkAddress);
+        SnowflakeZookeeperHolder holder = new SnowflakeZookeeperHolder(Utils.getIp(), String.valueOf(port), zkAddress, name);
         initFlag = holder.init();
         if (initFlag) {
             workerId = holder.getWorkerID();
