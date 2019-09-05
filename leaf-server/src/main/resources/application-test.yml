@@ -1,12 +1,12 @@
 leaf:
     jdbc:
-        password: devwjh
-        url: jdbc:mysql://192.168.90.235:3306/leaf?useUnicode=true&characterEncoding=utf8&useSSL=false
-        username: dev
+        url: jdbc:mysql://192.168.90.226:3306/leaf?useUnicode=true&characterEncoding=utf8&useSSL=false
+        username: devselec
+        password: wjhdevselecupda
     snowflake:
         zk:
-            address: 192.168.90.233:2181
+            address: 192.168.90.226:2181
 spring:
     redis:
-        database: 1
+        database: 2
         host: 192.168.90.230
