@@ -25,7 +25,7 @@ public class Result {
 
     public Result(SegmentStep segment, Status status) {
         this.segment = segment;
-        this.id = segment.getMaxId() - segment.getStep();
+        this.id = segment.getMaxId() - segment.getActualStep();
         this.status = status;
     }
 
