@@ -264,6 +264,9 @@ public class SegmentIDGenImpl implements IDGen {
         int finalStep;
         // 如果当前没有步长，这是为当前步长的1/10
         int minStep = segment.getBuffer().getMinStep() / 10;
+        if (minStep < 0) {
+            minStep = 1;
+        }
         if (step <= 0) {
             finalStep = minStep;
         } else {
