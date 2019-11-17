@@ -1,10 +1,14 @@
-package com.sankuai.inf.leaf.server;
+package com.sankuai.inf.leaf.server.controller;
 
 import com.sankuai.inf.leaf.cache.CacheService;
 import com.sankuai.inf.leaf.common.Result;
 import com.sankuai.inf.leaf.common.Status;
 import com.sankuai.inf.leaf.segment.model.SegmentStep;
 import com.sankuai.inf.leaf.server.exception.LeafServerException;
+import com.sankuai.inf.leaf.server.exception.NoKeyException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,6 +42,10 @@ public class LeafController {
     @RequestMapping(value = "/api/snowflake/get/{key}")
     public String getSnowflakeId(@PathVariable("key") String key) {
         return get(snowflakeService.getId(key));
+    }
+
+    public String getSnowflakeId(@PathVariable("key") String key) {
+        return get(snowflakeService.getId(key));
 
     }
 
@@ -54,6 +62,7 @@ public class LeafController {
         for (int i = 0; i < batchSize; i++) {
             segmentIds.add(get(segmentService.getId(key)));
         }
+        result = id;
         return segmentIds;
     }
 

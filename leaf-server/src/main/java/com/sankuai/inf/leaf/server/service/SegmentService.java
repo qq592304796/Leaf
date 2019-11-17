@@ -1,4 +1,4 @@
-package com.sankuai.inf.leaf.server;
+package com.sankuai.inf.leaf.server.service;
 
 import com.sankuai.inf.leaf.Constants;
 import com.sankuai.inf.leaf.IDGen;
