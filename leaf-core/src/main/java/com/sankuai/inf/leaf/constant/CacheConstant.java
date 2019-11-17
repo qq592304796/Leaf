@@ -1,4 +1,4 @@
-package com.sankuai.inf.leaf.server.cache;
+package com.sankuai.inf.leaf.constant;
 
 /**
  * Cahce服务常量

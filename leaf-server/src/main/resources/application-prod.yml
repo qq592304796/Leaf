@@ -1,26 +1,26 @@
 leaf:
-    jdbc:
-        password: devwjh
-        url: jdbc:mysql://192.168.90.235:3306/leaf?useUnicode=true&characterEncoding=utf8&useSSL=false
-        username: dev
-    snowflake:
-        zk:
-            address: 192.168.90.233:2181
+  jdbc:
+    password: devwjh
+    url: jdbc:mysql://192.168.90.235:3306/leaf?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: dev
+  snowflake:
+    zk:
+      address: 192.168.90.233:2181
 
 spring:
-    redis:
-        database: 1
-        host: 192.168.90.230
+  redis:
+    database: 1
+    host: 192.168.90.230
 
 logging:
-    level:
-        root: error
+  level:
+    root: error
 
 management:
-    endpoints:
-        web:
-            exposure:
-                include: health
-    endpoint:
-        health:
-            show-details: never
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never

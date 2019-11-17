@@ -1,11 +1,12 @@
 package com.sankuai.inf.leaf.snowflake;
 
 import com.sankuai.inf.leaf.Constants;
+import com.sankuai.inf.leaf.EmbedZKServer;
 import com.sankuai.inf.leaf.IDGen;
 import com.sankuai.inf.leaf.TestBootstrap;
 import com.sankuai.inf.leaf.common.PropertyFactory;
 import com.sankuai.inf.leaf.common.Result;
-import org.junit.Ignore;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * @author jiangxinjun
+ * @date 2019/11/17
+ */
+@Slf4j
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TestBootstrap.class)
-public class SnowflakeIDGenImplTest {
+@SpringBootTest(classes = TestBootstrap.class, properties = {"leaf.segment.enable=false", "leaf.snowflake.enable:true"})
+public class SnowflakeIDGenImplTest extends EmbedZKServer {
 
     @Autowired
     @Qualifier(Constants.LEAF_SNOWFLAKE_ID_GEN_IMPL_NAME)
@@ -37,6 +43,7 @@ public class SnowflakeIDGenImplTest {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     public void testResolveId() {
         long id = 1146367380083966026L;
@@ -89,9 +96,10 @@ public class SnowflakeIDGenImplTest {
     @Test
     public void testIncreasingTrend() {
         StopWatch sw = new StopWatch();
-        List<Long> caches = new ArrayList<>(10000);
+        int count  = 10000;
+        List<Long> caches = new ArrayList<>(count);
         sw.start();
-        for (int i = 1; i < 10000; ++i) {
+        for (int i = 1; i <= count; i++) {
             Result result = idGen.get("a");
             System.out.println(result);
             if (!caches.isEmpty()) {
@@ -111,6 +119,9 @@ public class SnowflakeIDGenImplTest {
         }
         sw.stop();
         System.out.println(sw.prettyPrint());
+        // 计算并发
+        double concurrent = count / sw.getTotalTimeSeconds();
+        log.debug("concurrent:{}", concurrent);
     }
 
 }

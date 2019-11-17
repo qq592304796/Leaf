@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,17 +19,18 @@ import java.util.Map;
 @Controller
 public class LeafMonitorController {
     private Logger logger = LoggerFactory.getLogger(LeafMonitorController.class);
-    @Autowired
-    SegmentService segmentService;
+
+    @Resource
+    private SegmentService segmentService;
 
     @RequestMapping(value = "cache")
     public String getCache(Model model) {
         Map<String, SegmentBufferView> data = new HashMap<>();
-        SegmentIDGenImpl segmentIDGen = segmentService.getIdGen();
-        if (segmentIDGen == null) {
+        SegmentIDGenImpl segmentIdGen = segmentService.getIdGen();
+        if (segmentIdGen == null) {
             throw new IllegalArgumentException("You should config leaf.segment.enable=true first");
         }
-        Map<String, SegmentBuffer> cache = segmentIDGen.getCache();
+        Map<String, SegmentBuffer> cache = segmentIdGen.getCache();
         for (Map.Entry<String, SegmentBuffer> entry : cache.entrySet()) {
             SegmentBufferView sv = new SegmentBufferView();
             SegmentBuffer buffer = entry.getValue();

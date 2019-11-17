@@ -1,6 +1,7 @@
 package com.sankuai.inf.leaf.segment.model;
 
 import java.util.Arrays;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -21,6 +22,8 @@ public class SegmentBuffer {
     private volatile int step;
     private volatile int minStep;
     private volatile long updateTimestamp;
+
+    private CountDownLatch countDownLatch;
 
     public SegmentBuffer() {
         segments = new Segment[]{new Segment(this), new Segment(this)};
@@ -109,6 +112,14 @@ public class SegmentBuffer {
 
     public void setUpdateTimestamp(long updateTimestamp) {
         this.updateTimestamp = updateTimestamp;
+    }
+
+    public CountDownLatch getCountDownLatch() {
+        return countDownLatch;
+    }
+
+    public void setCountDownLatch(CountDownLatch countDownLatch) {
+        this.countDownLatch = countDownLatch;
     }
 
     @Override

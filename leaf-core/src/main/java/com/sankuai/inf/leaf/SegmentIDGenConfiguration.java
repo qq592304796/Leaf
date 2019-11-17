@@ -1,12 +1,9 @@
 package com.sankuai.inf.leaf;
 
 import com.sankuai.inf.leaf.common.ZeroIDGen;
-import com.sankuai.inf.leaf.exception.InitException;
 import com.sankuai.inf.leaf.segment.SegmentIDGenImpl;
-import com.sankuai.inf.leaf.segment.dao.IDAllocDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.annotation.Bean;
@@ -27,9 +24,8 @@ public class SegmentIDGenConfiguration {
 
     private static final Logger logger = LoggerFactory.getLogger(SegmentIDGenConfiguration.class);
 
-    @SuppressWarnings({"AlibabaLowerCamelCaseVariableNaming"})
     @Bean(name = Constants.LEAF_SEGMENT_ID_GEN_IMPL_NAME)
-    public IDGen segmentIDGenImpl(@Autowired(required = false) IDAllocDao dao, Environment environment) throws InitException {
+    public IDGen segmentIdGenImpl(Environment environment) {
         Binder binder = Binder.get(environment);
         BindResult<Properties> bindResult = binder.bind("", Properties.class);
         Properties properties = bindResult.get();
@@ -38,12 +34,6 @@ public class SegmentIDGenConfiguration {
         if (flag) {
             // Config ID Gen‘
             idGen = new SegmentIDGenImpl();
-            ((SegmentIDGenImpl)idGen).setDao(dao);
-            if (idGen.init()) {
-                logger.info("Segment Service Init Successfully");
-            } else {
-                throw new InitException("Segment Service Init Fail");
-            }
         } else {
             idGen = new ZeroIDGen();
             logger.info("Zero ID Gen Service Init Successfully");

@@ -2,19 +2,17 @@ package com.sankuai.inf.leaf.snowflake;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Maps;
 import com.sankuai.inf.leaf.snowflake.exception.CheckLastTimeException;
 import org.apache.commons.io.FileUtils;
+import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryUntilElapsed;
+import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Maps;
-import com.sankuai.inf.leaf.common.*;
-import org.apache.curator.RetryPolicy;
-import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.zookeeper.CreateMode;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -175,14 +173,12 @@ public class SnowflakeZookeeperHolder {
     private String buildData() throws JsonProcessingException {
         Endpoint endpoint = new Endpoint(ip, port, System.currentTimeMillis());
         ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(endpoint);
-        return json;
+        return mapper.writeValueAsString(endpoint);
     }
 
-    private Endpoint deBuildData(String json) throws IOException {
+    private Endpoint deBuildData(String json) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        Endpoint endpoint = mapper.readValue(json, Endpoint.class);
-        return endpoint;
+        return mapper.readValue(json, Endpoint.class);
     }
 
     /**

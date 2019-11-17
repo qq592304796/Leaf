@@ -1,66 +1,86 @@
 leaf:
-    name: leaf
-    jdbc:
-        password: devwjh
-        url: jdbc:mysql://192.168.90.235:3306/leaf?useUnicode=true&characterEncoding=utf8&useSSL=false
-        username: dev
-    segment:
-        enable: true
-    snowflake:
-        enable: true
-        port: 80
-        zk:
-            address: 192.168.90.233:2181
+  name: leaf
+  jdbc:
+    #url: jdbc:mysql://192.168.90.235:3306/leaf?useUnicode=true&characterEncoding=utf8&useSSL=false
+    #username: dev
+    #password: devwjh
+    url: jdbc:h2:tcp://localhost/mem:leaf-server;MODE=MYSQL;DB_CLOSE_DELAY=-1
+    #url: jdbc:h2:mem:wms;MODE=MYSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password: sa
+
+  segment:
+    enable: true
+  snowflake:
+    enable: true
+    port: 80
+    zk:
+      #address: 127.0.0.1:2181
+      address: 192.168.90.233:2181
 
 server:
-    port: 80
+  port: 80
 
 logging:
-    level:
-        root: info
-        com.sankuai.inf.leaf: info
+  level:
+    root: info
+    com.sankuai.inf.leaf: info
 
 spring:
-    datasource:
-        druid:
-            password: ${leaf.jdbc.password:}
-            url: ${leaf.jdbc.url:}
-            username: ${leaf.jdbc.username:}
-            maxActive: 20
-            initialSize: 1
-            maxWait: 60000
-            minIdle: 1
-            timeBetweenEvictionRunsMillis: 60000
-            minEvictableIdleTimeMillis: 300000
-            validationQuery: select 'x'
-            testWhileIdle: true
-            connection-init-sqls: set names utf8mb4;
-            filters: stat,wall,mergeStat
-            filter:
-                stat:
-                    merge-sql: true
-            stat-view-servlet:
-                loginUsername: admin
-                loginPassword: 123456
-                url-pattern: /druid/*
-                enabled: true
-                reset-enable: true
-                allow:
-                deny:
-            web-stat-filter:
-                enabled: true
-                exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
-                sessionStatEnable: false
-                profileEnable: true
-    freemarker:
-        cache: false
-        charset: UTF-8
-        check-template-location: true
-        content-type: text/html
-        expose-request-attributes: true
-        expose-session-attributes: true
-        request-context-attribute: request
-    redis:
-        database: 1
-        host: 192.168.90.230
+  datasource:
+    druid:
+      password: ${leaf.jdbc.password:}
+      url: ${leaf.jdbc.url:}
+      username: ${leaf.jdbc.username:}
+      maxActive: 20
+      initialSize: 1
+      maxWait: 60000
+      minIdle: 1
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      connection-init-sqls: set names utf8mb4;
+      filters: stat,wall,mergeStat
+      filter:
+        stat:
+          merge-sql: true
+      stat-view-servlet:
+        loginUsername: admin
+        loginPassword: 123456
+        url-pattern: /druid/*
+        enabled: true
+        reset-enable: true
+        allow:
+        deny:
+      web-stat-filter:
+        enabled: true
+        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+        sessionStatEnable: false
+        profileEnable: true
+    schema: classpath:sql/ddl.sql
+    sql-script-encoding: UTF-8
+  freemarker:
+    cache: false
+    charset: UTF-8
+    check-template-location: true
+    content-type: text/html
+    expose-request-attributes: true
+    expose-session-attributes: true
+    request-context-attribute: request
+  redis:
+    database: 1
+    host: 127.0.0.1
+    #host: 192.168.90.230
+wjh:
+  leaf:
+    segment:
+      max-retry-time: 3
+      Wait-timeout: -1
 
+---
+spring:
+  #开启控制台 访问地址http://localhost:9777/wms/h2-console
+  h2:
+    console:
+      enabled: true

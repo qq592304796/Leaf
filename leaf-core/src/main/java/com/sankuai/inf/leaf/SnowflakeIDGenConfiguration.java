@@ -26,9 +26,8 @@ public class SnowflakeIDGenConfiguration {
 
     private static final Logger logger = LoggerFactory.getLogger(SnowflakeIDGenConfiguration.class);
 
-    @SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
     @Bean(name = Constants.LEAF_SNOWFLAKE_ID_GEN_IMPL_NAME)
-    public IDGen snowflakeIDGenImpl(Environment environment) throws InitException {
+    public IDGen snowflakeIdGenImpl(Environment environment) throws InitException {
         Binder binder = Binder.get(environment);
         BindResult<Properties> bindResult = binder.bind("", Properties.class);
         Properties properties = bindResult.get();
