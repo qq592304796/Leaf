@@ -18,11 +18,11 @@ public class SegmentService {
     @Resource(name = Constants.LEAF_SEGMENT_ID_GEN_IMPL_NAME)
     private IDGen idGen;
 
-    Result getId(String key) {
+    public Result getId(String key) {
         return idGen.get(key);
     }
 
-    Result getIdWithStep(String key, int step) {
+    public Result getIdWithStep(String key, int step) {
         return getIdGen().get(key, step);
     }
 

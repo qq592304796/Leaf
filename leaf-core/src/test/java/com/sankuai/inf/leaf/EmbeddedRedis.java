@@ -1,5 +1,7 @@
 package com.sankuai.inf.leaf;
 
+import org.junit.After;
+import org.junit.Before;
 import redis.embedded.RedisServer;
 
 import java.io.IOException;
@@ -16,12 +18,14 @@ public class EmbeddedRedis {
 
     private static RedisServer redisServer = null;
 
-    public static void start() throws IOException {
+    @Before
+    public void start() throws IOException {
         redisServer = new RedisServer(6379);
         redisServer.start();
     }
 
-    public static void stop() {
+    @After
+    public void stop() {
         redisServer.stop();
         redisServer = null;
     }

@@ -63,12 +63,12 @@ public class IDGenServiceTest {
     @Test
     public void testSegmentGetFromCachePerformance() throws InterruptedException {
         org.perf4j.StopWatch sw = new Slf4JStopWatch();
-        int count = 20000;
+        int count = 10000;
         CountDownLatch countDownLatch = new CountDownLatch(count);
         sw.start();
-        for (int i = 0; i < count; ++i) {
+        for (int i = 1; i <= count; i++) {
             executorService.submit(() -> {
-                Result result = idGen.get("leaf-segment-test2");
+                Result result = idGen.get("leaf-segment-test");
                 if (Status.EXCEPTION == result.getStatus()) {
                     log.error("get exception:{}", result);
                 }
@@ -77,10 +77,10 @@ public class IDGenServiceTest {
         }
         countDownLatch.await();
         sw.stop();
-        System.out.println(sw.toString());
+        log.info(sw.toString());
         // 计算并发
         BigDecimal concurrent = BigDecimal.valueOf(count).multiply(BigDecimal.valueOf(1000)).divide(BigDecimal.valueOf(sw.getElapsedTime()), 6, RoundingMode.DOWN);
-        System.out.println("concurrent:" + concurrent);
+        log.info("concurrent:{}", concurrent);
     }
 
 }

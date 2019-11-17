@@ -21,7 +21,7 @@ import java.util.concurrent.*;
  */
 @Slf4j
 @RunWith(SpringRunner.class)
-@SpringBootTest(properties = {"leaf.segment.enable=false", "leaf.snowflake.enable:false"})
+@SpringBootTest(properties = {"leaf.segment.enable=false", "leaf.snowflake.enable:false", "spring.datasource.druid.enable=false", "logging.level.com.sankuai.inf.leaf.cahce=info"})
 public class CacheServiceTests extends EmbeddedRedis {
 
     @Autowired
@@ -37,17 +37,21 @@ public class CacheServiceTests extends EmbeddedRedis {
         sw.start();
         for (int i = 0; i < count; ++i) {
             executorService.submit(() -> {
-                Long id = cacheService.getId("TEST");
+                Long id;
+                try {
+                    id = cacheService.getId("TEST");
+                } finally {
+                    countDownLatch.countDown();
+                }
                 log.debug("id:{}", id);
-                countDownLatch.countDown();
             });
         }
         countDownLatch.await();
         sw.stop();
-        System.out.println(sw.toString());
+        log.info(sw.toString());
         // 计算并发
         BigDecimal concurrent = BigDecimal.valueOf(count).multiply(BigDecimal.valueOf(1000)).divide(BigDecimal.valueOf(sw.getElapsedTime()), 6, RoundingMode.DOWN);
-        System.out.println("concurrent:" + concurrent);
+        log.info("concurrent:{}", concurrent);
     }
 
     @Test

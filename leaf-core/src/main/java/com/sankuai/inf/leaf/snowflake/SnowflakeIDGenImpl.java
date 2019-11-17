@@ -7,7 +7,6 @@ import com.sankuai.inf.leaf.common.Status;
 import com.sankuai.inf.leaf.common.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
@@ -26,7 +25,10 @@ public class SnowflakeIDGenImpl implements IDGen {
 
     private final long twepoch;
     private final long workerIdBits = 10L;
-    private final long maxWorkerId = ~(-1L << workerIdBits);//最大能够分配的workerid =1023
+    /**
+     * 最大能够分配的workerid =1023
+     */
+    private final long maxWorkerId = ~(-1L << workerIdBits);
     private final long sequenceBits = 12L;
     private final long workerIdShift = sequenceBits;
     private final long timestampLeftShift = sequenceBits + workerIdBits;
@@ -36,9 +38,9 @@ public class SnowflakeIDGenImpl implements IDGen {
     private long lastTimestamp = -1L;
     private static final Random RANDOM = new Random();
 
-    public SnowflakeIDGenImpl(String zkAddress, int port) {
+    public SnowflakeIDGenImpl(String zkAddress, int port, String name) {
         //2019-07-08 09:13:08 GMT+0800 (中国标准时间)
-        this(zkAddress, port, 1562548388638L);
+        this(zkAddress, port, name, 1562548388638L);
     }
 
     /**
@@ -46,11 +48,11 @@ public class SnowflakeIDGenImpl implements IDGen {
      * @param port      snowflake监听端口
      * @param twepoch   起始的时间戳
      */
-    public SnowflakeIDGenImpl(String zkAddress, int port, long twepoch) {
+    public SnowflakeIDGenImpl(String zkAddress, int port, String name, long twepoch) {
         this.twepoch = twepoch;
         Preconditions.checkArgument(timeGen() > twepoch, "Snowflake not support twepoch gt currentTime");
         final String ip = Utils.getIp();
-        SnowflakeZookeeperHolder holder = new SnowflakeZookeeperHolder(ip, String.valueOf(port), zkAddress);
+        SnowflakeZookeeperHolder holder = new SnowflakeZookeeperHolder(ip, String.valueOf(port), zkAddress, name);
         LOGGER.info("twepoch:{} ,ip:{} ,zkAddress:{} port:{}", twepoch, ip, zkAddress, port);
         boolean initFlag = holder.init();
         if (initFlag) {

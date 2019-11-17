@@ -4,8 +4,8 @@ leaf:
     #url: jdbc:mysql://192.168.90.235:3306/leaf?useUnicode=true&characterEncoding=utf8&useSSL=false
     #username: dev
     #password: devwjh
-    url: jdbc:h2:tcp://localhost/mem:leaf-server;MODE=MYSQL;DB_CLOSE_DELAY=-1
-    #url: jdbc:h2:mem:wms;MODE=MYSQL;DB_CLOSE_DELAY=-1
+    #url: jdbc:h2:tcp://localhost/mem:leaf-server;MODE=MYSQL;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:mem:leaf-server;MODE=MYSQL;DB_CLOSE_DELAY=-1
     username: sa
     password: sa
 
@@ -84,3 +84,5 @@ spring:
   h2:
     console:
       enabled: true
+
+
