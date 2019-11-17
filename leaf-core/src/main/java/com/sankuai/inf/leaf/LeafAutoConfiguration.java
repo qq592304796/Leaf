@@ -1,7 +1,9 @@
 package com.sankuai.inf.leaf;
 
+import com.sankuai.inf.leaf.cache.CacheService;
 import com.sankuai.inf.leaf.properties.LeafProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -14,5 +16,10 @@ import org.springframework.context.annotation.Import;
 @Import({SegmentIDGenConfiguration.class, SnowflakeIDGenConfiguration.class})
 @Configuration
 public class LeafAutoConfiguration {
+
+    @Bean
+    public CacheService cacheService() {
+        return new CacheService();
+    }
 
 }

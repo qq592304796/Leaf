@@ -1,11 +1,8 @@
 package com.sankuai.inf.leaf.cache;
 
 import com.sankuai.inf.leaf.constant.CacheConstant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.Duration;
@@ -20,10 +17,7 @@ import java.util.concurrent.TimeUnit;
  * @author jiangxinjun
  * @date 2019/11/17
  */
-@Service("CacheService")
 public class CacheService {
-
-    private Logger logger = LoggerFactory.getLogger(CacheService.class);
 
     private final static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
 
