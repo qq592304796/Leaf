@@ -26,7 +26,7 @@ public class SegmentService {
         return getIdGen().get(key, step);
     }
 
-    SegmentIDGenImpl getIdGen() {
+    public SegmentIDGenImpl getIdGen() {
         if (idGen instanceof SegmentIDGenImpl) {
             return (SegmentIDGenImpl) idGen;
         }
