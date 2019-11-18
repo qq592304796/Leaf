@@ -1,11 +1,14 @@
 package com.sankuai.inf.leaf.properties;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 /**
  * @author jiangxinjun
  * @date 2019/11/12
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 public class ExecutorProperties {
 

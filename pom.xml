@@ -51,9 +51,24 @@
         <wjh-logging.version>1.0.1-SNAPSHOT</wjh-logging.version>
         <embedded-redis.version>0.6</embedded-redis.version>
         <h2database.version>1.4.200</h2database.version>
+        <spring-cloud-alibaba.version>2.1.0.RELEASE</spring-cloud-alibaba.version>
+        <spring-cloud.version>2.1.2.RELEASE</spring-cloud.version>
     </properties>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-context</artifactId>
+                <version>${spring-cloud.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.sankuai.inf.leaf</groupId>
                 <artifactId>leaf-core</artifactId>

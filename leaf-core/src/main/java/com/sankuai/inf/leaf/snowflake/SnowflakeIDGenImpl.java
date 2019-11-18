@@ -2,9 +2,9 @@ package com.sankuai.inf.leaf.snowflake;
 
 import com.google.common.base.Preconditions;
 import com.sankuai.inf.leaf.IDGen;
+import com.sankuai.inf.leaf.common.IpUtils;
 import com.sankuai.inf.leaf.common.Result;
 import com.sankuai.inf.leaf.common.Status;
-import com.sankuai.inf.leaf.common.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +51,7 @@ public class SnowflakeIDGenImpl implements IDGen {
     public SnowflakeIDGenImpl(String zkAddress, int port, String name, long twepoch) {
         this.twepoch = twepoch;
         Preconditions.checkArgument(timeGen() > twepoch, "Snowflake not support twepoch gt currentTime");
-        final String ip = Utils.getIp();
+        final String ip = IpUtils.getIp();
         SnowflakeZookeeperHolder holder = new SnowflakeZookeeperHolder(ip, String.valueOf(port), zkAddress, name);
         LOGGER.info("twepoch:{} ,ip:{} ,zkAddress:{} port:{}", twepoch, ip, zkAddress, port);
         boolean initFlag = holder.init();

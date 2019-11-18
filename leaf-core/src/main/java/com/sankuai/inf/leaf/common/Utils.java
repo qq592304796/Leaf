@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+/**
+ * @author jiangxinjun
+ * @date 2019/11/18
+ */
+@Deprecated
 public class Utils {
     private static final Logger logger = LoggerFactory.getLogger(Utils.class);
 

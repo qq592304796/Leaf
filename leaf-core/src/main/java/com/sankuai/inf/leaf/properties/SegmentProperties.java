@@ -1,12 +1,17 @@
 package com.sankuai.inf.leaf.properties;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author jiangxinjun
  * @date 2019/11/12
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString(callSuper = true)
 @Data
 public class SegmentProperties {
 

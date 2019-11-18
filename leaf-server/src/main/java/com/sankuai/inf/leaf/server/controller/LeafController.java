@@ -3,6 +3,7 @@ package com.sankuai.inf.leaf.server.controller;
 import com.sankuai.inf.leaf.cache.CacheService;
 import com.sankuai.inf.leaf.common.Result;
 import com.sankuai.inf.leaf.common.Status;
+import com.sankuai.inf.leaf.properties.LeafProperties;
 import com.sankuai.inf.leaf.segment.model.SegmentStep;
 import com.sankuai.inf.leaf.server.exception.LeafServerException;
 import com.sankuai.inf.leaf.server.service.SegmentService;
@@ -31,6 +32,9 @@ public class LeafController {
 
     @Resource
     private CacheService cacheService;
+
+    @Resource
+    private LeafProperties leafProperties;
 
     @RequestMapping(value = "/api/segment/get/{key}")
     public String getSegmentId(@PathVariable("key") String key) {
