@@ -5,7 +5,7 @@ leaf:
     username: dev
   snowflake:
     zk:
-      address: 192.168.90.233:21811
+      address: 192.168.90.233:2181
 
 #redis配置
 spring:
