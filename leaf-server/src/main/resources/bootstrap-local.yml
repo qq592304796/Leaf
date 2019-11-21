@@ -20,4 +20,4 @@ server:
 
 logging:
   file:
-    path: ${user.home}/logs
+    path: ${user.home}/logs/${spring.application.name}

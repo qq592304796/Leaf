@@ -48,7 +48,7 @@
         <commons-io.version>2.4</commons-io.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
         <druid-spring-boot-starter.version>1.1.21</druid-spring-boot-starter.version>
-        <wjh-logging.version>1.0.1-SNAPSHOT</wjh-logging.version>
+        <wjh-logging.version>1.0.2-SNAPSHOT</wjh-logging.version>
         <embedded-redis.version>0.6</embedded-redis.version>
         <h2database.version>1.4.200</h2database.version>
         <spring-cloud-alibaba.version>2.1.0.RELEASE</spring-cloud-alibaba.version>
