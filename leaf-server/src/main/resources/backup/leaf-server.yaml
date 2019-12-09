@@ -1,0 +1,79 @@
+leaf:
+  name: leaf
+  segment:
+    enable: true
+  snowflake:
+    enable: true
+    port: 80
+
+server:
+  port: 80
+
+logging:
+  level:
+    root: info
+    com.sankuai.inf.leaf: info
+
+spring:
+  cloud:
+    config:
+      allowOverride: true
+      overrideNone: true
+  output:
+    ansi:
+      enabled: NEVER
+  jackson:
+    default-property-inclusion: non_null
+  datasource:
+    druid:
+      password: ${leaf.jdbc.password:}
+      url: ${leaf.jdbc.url:}
+      username: ${leaf.jdbc.username:}
+      maxActive: 20
+      initialSize: 1
+      maxWait: 60000
+      minIdle: 1
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      connection-init-sqls: set names utf8mb4;
+      filters: stat,wall,mergeStat
+      filter:
+        stat:
+          merge-sql: true
+      stat-view-servlet:
+        loginUsername: admin
+        loginPassword: 123456
+        url-pattern: /druid/*
+        enabled: true
+        reset-enable: true
+        allow:
+        deny:
+      web-stat-filter:
+        enabled: true
+        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+        sessionStatEnable: false
+        profileEnable: true
+  freemarker:
+    cache: false
+    charset: UTF-8
+    check-template-location: true
+    content-type: text/html
+    expose-request-attributes: true
+    expose-session-attributes: true
+    request-context-attribute: request
+    suffix: .ftl
+
+management:
+  endpoints:
+    web:
+      #base-path: /actuator
+      base-path: /
+      path-mapping:
+        health: ping
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always

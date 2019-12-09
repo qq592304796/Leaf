@@ -8,7 +8,6 @@ leaf:
       address: 192.168.90.233:2181
 
 #redis配置
----
 spring:
   redis:
     database: 1
@@ -16,9 +15,6 @@ spring:
       master: mymaster
       nodes: 192.168.90.235:7002,192.168.90.235:7003,192.168.90.235:7004
 
-server:
-  port: 9779
-
 logging:
   file:
-    path: ${user.home}/logs/${spring.application.name}
+    path: /data/servicesLog/logs

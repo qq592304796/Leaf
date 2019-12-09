@@ -1,0 +1,20 @@
+leaf:
+  jdbc:
+    url: jdbc:mysql://192.168.90.226:3306/leaf?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: devselec
+    password: wjhdevselecupda
+  snowflake:
+    zk:
+      address: 192.168.90.226:2181
+
+#redis配置
+---
+spring:
+  redis:
+    sentinel:
+      master: mymaster
+      nodes: 192.168.90.226:7002,192.168.90.226:7003,192.168.90.226:7004
+
+logging:
+  file:
+    path: /data/servicesLog/logs
